@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cbb96 — Projects</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --card: #1a1a26;
+    --border: #2a2a3a;
+    --text: #e8e8f0;
+    --muted: #7a7a96;
+    --accent-1: #ff6b4a;
+    --accent-2: #4af0c8;
+    --accent-3: #6b8aff;
+    --accent-4: #ffcc4a;
+    --accent-5: #c084fc;
+    --glow-1: rgba(255,107,74,0.15);
+    --glow-2: rgba(74,240,200,0.15);
+    --glow-3: rgba(107,138,255,0.15);
+    --glow-4: rgba(255,204,74,0.15);
+    --glow-5: rgba(192,132,252,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* Background grid */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.08;
+    z-index: 0;
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.12;
+    z-index: 0;
+    animation: orbit 25s ease-in-out infinite;
+  }
+  .orb-1 { width: 500px; height: 500px; background: var(--accent-1); top: -10%; right: -5%; animation-delay: 0s; }
+  .orb-2 { width: 400px; height: 400px; background: var(--accent-3); bottom: -10%; left: -5%; animation-delay: -8s; }
+  .orb-3 { width: 350px; height: 350px; background: var(--accent-2); top: 40%; left: 50%; animation-delay: -15s; }
+
+  @keyframes orbit {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.05); }
+    66% { transform: translate(-20px, 30px) scale(0.95); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* HEADER */
+  header {
+    padding: 80px 0 40px;
+    text-align: center;
+    position: relative;
+  }
+
+  .avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    object-fit: cover;
+    background: var(--card);
+  }
+
+  .header-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.15s forwards;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.25s forwards;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-4), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.35s forwards;
+  }
+
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    padding: 8px 20px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.45s forwards;
+  }
+  .github-link:hover {
+    color: var(--text);
+    border-color: var(--accent-2);
+    box-shadow: 0 0 20px var(--glow-2);
+  }
+  .github-link svg { width: 16px; height: 16px; }
+
+  /* PROJECTS GRID */
+  .projects {
+    padding: 40px 0 100px;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 40px;
+    padding-left: 4px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.5s forwards;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  /* PROJECT CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px 28px;
+    text-decoration: none;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    display: flex;
+    flex-direction: column;
+    min-height: 220px;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: transparent;
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .card-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .card-tech {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .card-arrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  .card-arrow svg { width: 14px; height: 14px; color: var(--muted); transition: color 0.3s; }
+  .card:hover .card-arrow { border-color: var(--text); }
+  .card:hover .card-arrow svg { color: var(--text); }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 0 60px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    header { padding: 60px 0 30px; }
+    .grid { grid-template-columns: 1fr; }
+    .card { min-height: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="container">
+
+  <header>
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/180565848?v=4" alt="cbb96 avatar" />
+    <div class="header-tag">Web Projects</div>
+    <h1><span>cbb96</span></h1>
+    <p class="subtitle">A collection of web tools and apps — calculators, trackers, and utilities built with HTML, CSS & JavaScript.</p>
+    <a href="https://github.com/cbb96" target="_blank" rel="noopener" class="github-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      github.com/cbb96
+    </a>
+  </header>
+
+  <section class="projects">
+    <div class="section-label">Projects</div>
+    <div class="grid" id="project-grid"></div>
+  </section>
+
+<script>
+// =============================================
+//  ADD YOUR PROJECTS HERE
+//  Just copy an object and fill in the fields.
+//  Colors auto-cycle — no extra config needed.
+// =============================================
+const projects = [
+  {
+    title: "Ohm's Law",
+    repo:  "ohmslaw",           // GitHub repo name (used for the link)
+    desc:  "Electrical calculator for voltage, current, resistance and power using Ohm's Law formulas.",
+    icon:  "⚡",
+    tech:  "JS · CSS · HTML",
+  },
+  {
+    title: "Weather",
+    repo:  "weather",
+    desc:  "Weather application for checking current conditions and forecasts by location.",
+    icon:  "🌤️",
+    tech:  "HTML · JS",
+  },
+  {
+    title: "What Movie",
+    repo:  "whatmovie",
+    desc:  "Browse and discover movie trailers — find something new to watch.",
+    icon:  "🎬",
+    tech:  "HTML · JS",
+  },
+  {
+    title: "Todo List",
+    repo:  "todo",
+    desc:  "Simple, clean task manager to keep track of what needs to get done.",
+    icon:  "✅",
+    tech:  "HTML · JS",
+  },
+  {
+    title: "Vape Calculator",
+    repo:  "vape",
+    desc:  "Nicotine strength calculator for mixing vape juice — get your ratios right.",
+    icon:  "💨",
+    tech:  "HTML · JS",
+  },
+  // {
+  //   title: "New Project",
+  //   repo:  "new-repo",
+  //   desc:  "Description of the project.",
+  //   icon:  "🚀",
+  //   tech:  "HTML · JS",
+  // },
+];
+
+// =============================================
+//  Color themes that auto-cycle per card
+// =============================================
+const GITHUB_USER = "cbb96";
+
+const themes = [
+  { accent: "#ff6b4a", accentB: "#ffcc4a", glow: "rgba(255,107,74,0.15)", ring: "rgba(255,107,74,0.2)" },
+  { accent: "#6b8aff", accentB: "#4af0c8", glow: "rgba(107,138,255,0.15)", ring: "rgba(107,138,255,0.2)" },
+  { accent: "#c084fc", accentB: "#ff6b4a", glow: "rgba(192,132,252,0.15)", ring: "rgba(192,132,252,0.2)" },
+  { accent: "#4af0c8", accentB: "#ffcc4a", glow: "rgba(74,240,200,0.15)",  ring: "rgba(74,240,200,0.2)"  },
+  { accent: "#ffcc4a", accentB: "#ff6b4a", glow: "rgba(255,204,74,0.15)",  ring: "rgba(255,204,74,0.2)"  },
+];
+
+const grid = document.getElementById("project-grid");
+
+projects.forEach((p, i) => {
+  const t = themes[i % themes.length];
+  const delay = 0.55 + i * 0.1;
+  const url = `https://${GITHUB_USER}.github.io/${p.repo}/`;
+
+  const card = document.createElement("a");
+  card.href = url;
+  card.target = "_blank";
+  card.rel = "noopener";
+  card.className = "card";
+  card.style.animationDelay = `${delay}s`;
+
+  // Set dynamic colors via inline custom properties
+  card.style.setProperty("--c-accent", t.accent);
+  card.style.setProperty("--c-accent-b", t.accentB);
+  card.style.setProperty("--c-glow", t.glow);
+  card.style.setProperty("--c-ring", t.ring);
+
+  card.innerHTML = `
+    <div class="card-icon" style="background:var(--c-glow)">${p.icon}</div>
+    <div class="card-title">${p.title}</div>
+    <div class="card-desc">${p.desc}</div>
+    <div class="card-footer">
+      <span class="card-tech">${p.tech}</span>
+      <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+    </div>
+  `;
+
+  // Dynamic hover colors via inline style sheet injection
+  card.addEventListener("mouseenter", () => {
+    card.style.boxShadow = `0 12px 40px var(--c-glow), 0 0 0 1px var(--c-ring)`;
+    card.querySelector(".card::before")
+  });
+  card.addEventListener("mouseleave", () => {
+    card.style.boxShadow = "";
+  });
+
+  grid.appendChild(card);
+});
+
+// Inject dynamic ::before gradient via a style tag
+const dynamicStyles = document.createElement("style");
+dynamicStyles.textContent = `
+  .card::before {
+    background: linear-gradient(90deg, var(--c-accent), var(--c-accent-b)) !important;
+  }
+`;
+document.head.appendChild(dynamicStyles);
+</script>
+
+</div>
+
+<footer>
+  <div class="container">cbb96 &copy; 2026</div>
+</footer>
+
+</body>
+</html>
